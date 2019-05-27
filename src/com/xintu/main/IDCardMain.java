@@ -56,8 +56,10 @@ public class IDCardMain extends JFrame implements ActionListener {
 //  斐斐打码识别
 	public static final String app_id = "312281";
 	public static final String app_key = "XQ6OLC7Kjr24H2HxzCTgYv2rUK8bQOXK";
-	public static final String pd_id = "112281";
-	public static final String pd_key = "/IMCvjOUA0qx+wme8kdYLE1EfpnqjVOL";
+//	public static final String pd_id = "112281";
+//	public static final String pd_key = "/IMCvjOUA0qx+wme8kdYLE1EfpnqjVOL";
+	public static final String pd_id = "112474";
+	public static final String pd_key = "4wpS3Pum+sEbPWygpT/PeWT+Lf2RblPE";
 	public static final String pred_type = "10400";
 	static Api api;
 

@@ -102,7 +102,7 @@ public class IDCardMain extends JFrame implements ActionListener {
 
 	public static void sleep() {
 		try {
-			Thread.sleep((long) (500 + Math.random() * 500));
+			Thread.sleep((long) (200 + Math.random() * 400));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -125,9 +125,15 @@ public class IDCardMain extends JFrame implements ActionListener {
 		if (isDebug) {
 			System.out.println("resImg1>>>" + resImg1);
 		}
+		if ("".equals(resImg1)) {
+			return "resnull";
+		}
 		JSONObject josnImg1 = JSON.parseObject(resImg1);
 		sleep();// 休息
 		String resImg2 = HttpUploadFile.UploadImage(strUrlUpImg, strBackImg);
+		if ("".equals(resImg2)) {
+			return "resnull";
+		}
 		JSONObject josnImg2 = JSON.parseObject(resImg2);
 		if (isDebug) {
 			System.out.println("resImg2>>>" + resImg2);
@@ -153,6 +159,9 @@ public class IDCardMain extends JFrame implements ActionListener {
 		String resICardNum = HttpUploadFile.formUp(strUrlICardNum, mapICardNum, "", true);
 		if (isDebug) {
 			System.out.println("2<<<resICardNum=" + resICardNum);
+		}
+		if ("".equals(resICardNum)) {
+			return "resnull";
 		}
 		JSONObject josnICardNum = JSON.parseObject(resICardNum);
 
@@ -236,6 +245,9 @@ public class IDCardMain extends JFrame implements ActionListener {
 		}
 
 		String resAuth = HttpUploadFile.formUp(strUrlAuth, mapAuth, HttpUploadFile.getCookies(), false);
+		if ("".equals(resAuth)) {
+			return "resnull";
+		}
 		JSONObject jsonresAuth = JSONObject.parseObject(resAuth);
 		System.out.println("4<<<resAuth=" + resAuth);
 
@@ -268,6 +280,9 @@ public class IDCardMain extends JFrame implements ActionListener {
 		if (isDebug) {
 			System.out.println("5<<<resImg3=" + resImg3);
 		}
+		if ("".equals(resImg3)) {
+			return "resnull";
+		}
 		JSONObject jsonImg3 = JSON.parseObject(resImg3);
 
 		if (!"0000".equals(jsonImg3.getString("code"))) {
@@ -290,13 +305,16 @@ public class IDCardMain extends JFrame implements ActionListener {
 
 		String resHoldImg = HttpUploadFile.formUp(strUrlHoldImg, mapHoldImg, HttpUploadFile.getCookies(), false);
 		System.out.println("6<<<resHoldImg=" + resHoldImg);
+		if ("".equals(resHoldImg)) {
+			return "resnull";
+		}
 		JSONObject jsonHoldImg = JSON.parseObject(resHoldImg);
 		if ("7101".equals(jsonHoldImg.getString("code"))) {
 			// {"code":"7101","msg":"此证件已经绑定5张卡"}
 			return "cardfull";
 		}
 
-		if ("".equals(resHoldImg) || !"0000".equals(jsonHoldImg.getString("code"))) {
+		if (!"0000".equals(jsonHoldImg.getString("code"))) {
 			System.out.println("6<<<" + strICCID + "-->认证失败");
 			return "failed";
 		} else {
@@ -521,6 +539,12 @@ public class IDCardMain extends JFrame implements ActionListener {
 				if ("".equals(strICCID)) {
 					continue;
 				}
+				if (strICCID.length() < 19) {
+					System.out.println(strICCID + "--->异常");
+					continue;
+				}
+
+				strICCID = strICCID.substring(0, 19);
 
 				tipValue = strICCID + "-->开始实名";
 				SwingUtilities.invokeLater(run);
@@ -568,6 +592,10 @@ public class IDCardMain extends JFrame implements ActionListener {
 					tipValue = strICCID + "->已实名";
 					SwingUtilities.invokeLater(run);
 					logger.error("suc," + strICCID + "已实名认证");
+				} else if ("resnull".equals(strRes)) {
+					logger.error("fail," + strICCID + "," + cardList.get(j).getStrDir() + ",接口数据返回为空");
+					tipValue = strICCID + "->实名失败,系统错误";
+					SwingUtilities.invokeLater(run);
 				} else {// 成功
 					tipValue = strICCID + "->实名成功";
 					SwingUtilities.invokeLater(run);
@@ -579,20 +607,20 @@ public class IDCardMain extends JFrame implements ActionListener {
 				}
 				if (totalnum == 10) {
 					totalnum = 0;
-					System.out.println("操作完成10个，休息1分钟");
-					tipValue = "操作完成10个，休息1分钟";
+					System.out.println("操作完成10个，休息20秒");
+					tipValue = "操作完成10个，休息20秒";
 					SwingUtilities.invokeLater(run);
 					try {
-						Thread.sleep((long) (60000 + Math.random() * 1000));
+						Thread.sleep((long) (20000 + Math.random() * 1000));
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
 				} else {
-					System.out.println("操作完成1个，休息2秒");
+					System.out.println("操作完成1个，休息1秒");
 					try {
-						Thread.sleep((long) (1500 + Math.random() * 500));
+						Thread.sleep((long) (300 + Math.random() * 500));
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

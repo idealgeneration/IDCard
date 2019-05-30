@@ -157,6 +157,7 @@ public class HttpUploadFile {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("formUp.e=" + e);
 		}
 
 		return buffer.toString();
